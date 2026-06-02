@@ -54,6 +54,13 @@ let currentUser=null;
 let chats={};
 let currentChat="Chat 1";
 
+  const knowledge = {
+  "who is firestar": "Firestar is a ThunderClan leader from Warrior Cats.",
+  "what type is eevee": "Eevee is a Normal-type Pokémon.",
+  "what is roblox": "Roblox is a platform where people create and play games.",
+  "what is minecraft": "Minecraft is a sandbox game where players build and explore."
+};
+
 function getAccounts(){
   return JSON.parse(localStorage.getItem("aiAccountsV12"))||{};
 }
