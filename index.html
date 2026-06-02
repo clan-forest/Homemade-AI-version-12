@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Homemade AI Version Twelve</title>
+<title>Homemade AI Version Thirteen</title>
 <style>
 body{margin:0;background:#111;color:white;font-family:Arial;}
 #loginScreen{padding:25px;max-width:420px;margin:auto;}
@@ -37,14 +37,11 @@ pre{background:#000;padding:10px;border-radius:8px;white-space:pre-wrap;overflow
   </div>
 
   <div id="main">
-    <h1>🤖 Homemade AI Version Twelve 🎤</h1>
+    <h1>🤖 Homemade AI Version Thirteen 📚</h1>
     <h3 id="chatTitle"></h3>
-
     <div id="chat"></div><br>
-
     <input id="input" placeholder="Talk or type to me...">
     <button id="sendBtn">Send 🚀</button>
-    <button id="talkBtn">🎤 Talk</button>
     <button id="deleteBtn">Delete 🗑️</button>
   </div>
 </div>
@@ -54,31 +51,20 @@ let currentUser=null;
 let chats={};
 let currentChat="Chat 1";
 
-  const knowledge = {
-  "who is firestar": "Firestar is a ThunderClan leader from Warrior Cats.",
-  "what type is eevee": "Eevee is a Normal-type Pokémon.",
-  "what is roblox": "Roblox is a platform where people create and play games.",
-  "what is minecraft": "Minecraft is a sandbox game where players build and explore.",
-  "what is a dog": "A dog is a domesticated mammal.",
-  "who made this ai": "cheese4dinner made this AI.",
-  "what is pikachu": "Pikachu is an Electric-type Pokémon."
+const knowledge={
+  "who is firestar":"Firestar is a ThunderClan leader from Warrior Cats.",
+  "what type is eevee":"Eevee is a Normal-type Pokémon.",
+  "what is roblox":"Roblox is a platform where people create and play games.",
+  "what is minecraft":"Minecraft is a sandbox game where players build and explore.",
+  "what is a dog":"A dog is a domesticated mammal.",
+  "who made this ai":"cheese4dinner made this AI.",
+  "what is pikachu":"Pikachu is an Electric-type Pokémon."
 };
 
-function getAccounts(){
-  return JSON.parse(localStorage.getItem("aiAccountsV12"))||{};
-}
-
-function saveAccounts(accounts){
-  localStorage.setItem("aiAccountsV12",JSON.stringify(accounts));
-}
-
-function userKey(){
-  return "aiChatsV12_"+currentUser;
-}
-
-function currentKey(){
-  return "aiCurrentChatV12_"+currentUser;
-}
+function getAccounts(){return JSON.parse(localStorage.getItem("aiAccountsV13"))||{};}
+function saveAccounts(accounts){localStorage.setItem("aiAccountsV13",JSON.stringify(accounts));}
+function userKey(){return "aiChatsV13_"+currentUser;}
+function currentKey(){return "aiCurrentChatV13_"+currentUser;}
 
 function loadUserData(){
   chats=JSON.parse(localStorage.getItem(userKey()))||{"Chat 1":[]};
@@ -94,19 +80,9 @@ function createAccount(){
   let u=document.getElementById("username").value.trim();
   let p=document.getElementById("password").value.trim();
   let msg=document.getElementById("loginMsg");
-
-  if(!u||!p){
-    msg.innerText="Enter a username and password.";
-    return;
-  }
-
+  if(!u||!p){msg.innerText="Enter a username and password.";return;}
   let accounts=getAccounts();
-
-  if(accounts[u]){
-    msg.innerText="That account already exists.";
-    return;
-  }
-
+  if(accounts[u]){msg.innerText="That account already exists.";return;}
   accounts[u]=p;
   saveAccounts(accounts);
   msg.innerText="Account created! Now log in.";
@@ -117,19 +93,12 @@ function login(){
   let p=document.getElementById("password").value.trim();
   let msg=document.getElementById("loginMsg");
   let accounts=getAccounts();
-
-  if(accounts[u]!==p){
-    msg.innerText="Wrong username or password.";
-    return;
-  }
-
+  if(accounts[u]!==p){msg.innerText="Wrong username or password.";return;}
   currentUser=u;
   loadUserData();
-
   document.getElementById("loginScreen").style.display="none";
   document.getElementById("app").style.display="flex";
   document.getElementById("userLabel").innerText="👤 "+currentUser;
-
   renderChat();
 }
 
@@ -140,10 +109,7 @@ function logout(){
 }
 
 function escapeHTML(text){
-  return String(text)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;");
+  return String(text).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
 }
 
 function addMessage(name,text){
@@ -152,53 +118,27 @@ function addMessage(name,text){
   chat.scrollTop=chat.scrollHeight;
 }
 
-function speak(text){
-  if(!("speechSynthesis" in window)) return;
-
-  speechSynthesis.cancel();
-
-  let voice=new SpeechSynthesisUtterance(text);
-  voice.lang="en-US";
-  voice.rate=1;
-  voice.pitch=1;
-
-  speechSynthesis.speak(voice);
-}
-
 function remember(name,text){
   chats[currentChat].push({name:name,text:text});
   saveAll();
   addMessage(name,text);
-
-  if(name.includes("AI")){
-    speak(text);
-  }
 }
 
 function renderChat(){
   document.getElementById("chat").innerHTML="";
   document.getElementById("chatTitle").innerText="📂 "+currentChat;
-
-  chats[currentChat].forEach(function(m){
-    addMessage(m.name,m.text);
-  });
-
+  chats[currentChat].forEach(function(m){addMessage(m.name,m.text);});
   renderChatList();
 }
 
 function renderChatList(){
   let list=document.getElementById("chatList");
   list.innerHTML="";
-
   Object.keys(chats).forEach(function(name){
     let btn=document.createElement("button");
     btn.className="chatBtn";
     btn.textContent=(name===currentChat?"⭐ ":"📂 ")+name;
-    btn.onclick=function(){
-      currentChat=name;
-      saveAll();
-      renderChat();
-    };
+    btn.onclick=function(){currentChat=name;saveAll();renderChat();};
     list.appendChild(btn);
   });
 }
@@ -206,12 +146,7 @@ function renderChatList(){
 function newChat(){
   let name=prompt("Name this chat:");
   if(!name)return;
-
-  if(chats[name]){
-    alert("That chat already exists.");
-    return;
-  }
-
+  if(chats[name]){alert("That chat already exists.");return;}
   chats[name]=[];
   currentChat=name;
   saveAll();
@@ -220,25 +155,15 @@ function newChat(){
 
 function deleteChat(){
   if(!confirm("Delete this chat?"))return;
-
   delete chats[currentChat];
-
   let names=Object.keys(chats);
-
-  if(names.length===0){
-    chats["Chat 1"]=[];
-    currentChat="Chat 1";
-  }else{
-    currentChat=names[0];
-  }
-
+  if(names.length===0){chats["Chat 1"]=[];currentChat="Chat 1";}
+  else{currentChat=names[0];}
   saveAll();
   renderChat();
 }
 
-function isMath(text){
-  return /^[0-9+\-*/(). %]+$/.test(text);
-}
+function isMath(text){return /^[0-9+\-*/(). %]+$/.test(text);}
 
 function doMath(text){
   try{
@@ -249,35 +174,9 @@ function doMath(text){
   }
 }
 
-function talk(){
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-  if(!SpeechRecognition){
-    alert("Microphone speech is not supported here. Try Safari.");
-    return;
-  }
-
-  let recognition=new SpeechRecognition();
-  recognition.lang="en-US";
-  recognition.start();
-
-  recognition.onresult=function(event){
-    let spokenText=event.results[0][0].transcript;
-    document.getElementById("input").value=spokenText;
-    send();
-  };
-
-  recognition.onerror=function(){
-    alert("Microphone did not work. Check microphone permission.");
-  };
-}
-
 async function send(){
   let box=document.getElementById("input");
   let question=box.value.trim();
-
   if(question==="")return;
 
   remember("You 🙂",question);
@@ -286,9 +185,9 @@ async function send(){
   let lower=question.toLowerCase();
 
   if(knowledge[lower]){
-  remember("AI 🤖", knowledge[lower]);
-  return;
-}
+    remember("AI 🤖",knowledge[lower]);
+    return;
+  }
 
   if(lower==="hi"||lower==="hello"||lower==="hey"){
     remember("AI 🤖","Hi! 👋 How can I help?");
@@ -301,7 +200,7 @@ async function send(){
   }
 
   if(lower==="what is your name"){
-    remember("AI 🤖","I'm Homemade AI Version Twelve 🎤");
+    remember("AI 🤖","I'm Homemade AI Version Thirteen 📚");
     return;
   }
 
@@ -331,33 +230,40 @@ async function send(){
     return;
   }
 
-  if(lower.includes("im sad")||lower.includes("i am sad")){
-    remember("AI 🤖","I'm sorry you're sad. 😟 Want to talk about what happened?");
-    return;
-  }
+  if(lower.includes("book")||lower.includes("books")||lower.includes("title")){
+    remember("AI 🤖","Searching books... 📚");
 
-  if(lower.includes("im happy")||lower.includes("i am happy")){
-    remember("AI 🤖","That's awesome! 😄 What made you happy?");
-    return;
-  }
+    try{
+      let bookUrl="https://www.googleapis.com/books/v1/volumes?q="+encodeURIComponent(question);
+      let bookResponse=await fetch(bookUrl);
+      let bookData=await bookResponse.json();
 
-  if(lower.includes("i am bored")||lower.includes("im bored")){
-    remember("AI 🤖","Bored? We can make a game, tell jokes, talk Pokémon, or build a website. 😆");
-    return;
-  }
+      chats[currentChat].pop();
+      saveAll();
+      renderChat();
 
-  if(lower.includes("lets talk")||lower.includes("let's talk")){
-    remember("AI 🤖","Sure! What do you want to talk about? Games, coding, Pokémon, YouTube, or random stuff? 💬");
-    return;
-  }
+      if(bookData.items&&bookData.items.length>0){
+        let answer="📚 Book titles I found:\\n\\n";
 
-  if(lower.includes("do you like me")){
-    remember("AI 🤖","Of course! You're the person who made me. 😄");
-    return;
-  }
+        bookData.items.slice(0,7).forEach(function(book,index){
+          let info=book.volumeInfo;
+          answer+=(index+1)+". "+(info.title||"No title")+"\\n";
+          if(info.authors){answer+="Author: "+info.authors.join(", ")+"\\n";}
+          if(info.publishedDate){answer+="Published: "+info.publishedDate+"\\n";}
+          answer+="\\n";
+        });
 
-  if(lower.includes("what are you doing")){
-    remember("AI 🤖","I'm hanging out here, waiting to help you build cool stuff. 😎");
+        remember("AI 🤖",answer);
+      }else{
+        remember("AI 🤖","I couldn't find a book title for that.");
+      }
+    }catch(error){
+      chats[currentChat].pop();
+      saveAll();
+      renderChat();
+      remember("AI 🤖","Book search failed.");
+    }
+
     return;
   }
 
@@ -376,47 +282,10 @@ async function send(){
     return;
   }
 
-  if(lower.includes("make")&&lower.includes("html")){
-    remember("AI 🤖",
-`Here is a tiny HTML starter:
-
-<!DOCTYPE html>
-<html>
-<head>
-<title>My Page</title>
-</head>
-<body>
-<h1>Hello!</h1>
-<button onclick="alert('Hi!')">Click me</button>
-</body>
-</html>`);
-    return;
-  }
-
-  if(lower.includes("clicker game")){
-    remember("AI 🤖",
-`<!DOCTYPE html>
-<html>
-<body>
-<h1>Clicker Game</h1>
-<p>Score: <span id="score">0</span></p>
-<button onclick="score++;document.getElementById('score').innerText=score;">Click</button>
-<script>
-let score=0;
-<\/script>
-</body>
-</html>`);
-    return;
-  }
-
   remember("AI 🤖","Searching Wikipedia... 🌐");
 
   try{
-    let searchUrl=
-      "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+
-      encodeURIComponent(question)+
-      "&format=json&origin=*";
-
+    let searchUrl="https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(question)+"&format=json&origin=*";
     let searchResponse=await fetch(searchUrl);
     let searchData=await searchResponse.json();
 
@@ -426,22 +295,12 @@ let score=0;
 
     if(searchData.query&&searchData.query.search&&searchData.query.search.length>0){
       let title=searchData.query.search[0].title;
-
-      let summaryResponse=await fetch(
-        "https://en.wikipedia.org/api/rest_v1/page/summary/"+
-        encodeURIComponent(title)
-      );
-
+      let summaryResponse=await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(title));
       let summaryData=await summaryResponse.json();
-
-      remember(
-        "AI 🤖",
-        summaryData.extract || "I found a page, but it had no summary."
-      );
+      remember("AI 🤖",summaryData.extract||"I found a page, but it had no summary.");
     }else{
       remember("AI 🤖","I couldn't find anything on Wikipedia.");
     }
-
   }catch(error){
     chats[currentChat].pop();
     saveAll();
@@ -454,7 +313,6 @@ document.getElementById("createBtn").addEventListener("click",createAccount);
 document.getElementById("loginBtn").addEventListener("click",login);
 document.getElementById("logoutBtn").addEventListener("click",logout);
 document.getElementById("sendBtn").addEventListener("click",send);
-document.getElementById("talkBtn").addEventListener("click",talk);
 document.getElementById("newBtn").addEventListener("click",newChat);
 document.getElementById("deleteBtn").addEventListener("click",deleteChat);
 
