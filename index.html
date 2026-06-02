@@ -51,6 +51,13 @@ let currentUser=null;
 let chats={};
 let currentChat="Chat 1";
 
+function cleanText(text){
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[?!.,]/g,"");
+}
+  
 const knowledge={
   "who is firestar":"Firestar is a ThunderClan leader from Warrior Cats.",
   "what type is eevee":"Eevee is a Normal-type Pokémon.",
@@ -186,7 +193,7 @@ async function send(){
   remember("You 🙂",question);
   box.value="";
 
-  let lower=question.toLowerCase();
+  let lower=cleanText(question);question.toLowerCase();
 
   if(knowledge[lower]){
     remember("AI 🤖",knowledge[lower]);
