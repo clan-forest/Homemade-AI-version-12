@@ -144,6 +144,19 @@ let currentUser=null;
 let chats={};
 let currentChat="Chat 1";
 
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+
+  speechSynthesis.cancel();
+
+  let voice = new SpeechSynthesisUtterance(text);
+  voice.lang = "en-US";
+  voice.rate = 1;
+  voice.pitch = 1;
+
+  speechSynthesis.speak(voice);
+}
+  
 function cleanText(text){
   return String(text).toLowerCase().trim().replace(/[?!.,]/g,"");
 }
