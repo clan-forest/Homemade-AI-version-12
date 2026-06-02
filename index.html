@@ -282,6 +282,11 @@ async function send(){
 
   let lower=question.toLowerCase();
 
+  if(knowledge[lower]){
+  remember("AI 🤖", knowledge[lower]);
+  return;
+}
+
   if(lower==="hi"||lower==="hello"||lower==="hey"){
     remember("AI 🤖","Hi! 👋 How can I help?");
     return;
